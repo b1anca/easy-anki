@@ -7,6 +7,11 @@ require "easy-anki"
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
+OpenAI.configure do |config|
+  config.access_token = EasyAnki.configuration.openai_access_token
+  config.organization_id = EasyAnki.configuration.openai_organization_id
+end
+
 # (If you use this, don't forget to add pry to your Gemfile!)
 # require "pry"
 # Pry.start
