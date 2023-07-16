@@ -2,7 +2,7 @@
 
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in easy_anki.gemspec
+# Specify your gem's dependencies in easy-anki.gemspec
 gemspec
 
 gem "rake", "~> 13.0"
