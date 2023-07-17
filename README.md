@@ -1,6 +1,7 @@
 # Easy Anki
 
-Anki Flashcards generator
+Generate your Anki flashcards from your exported Anki `.txt` data, from `.csv` or directly from an array of words.
+Translates words and gives English definitions to boost your vocabulary!
 
 [![Gem Version](https://badge.fury.io/rb/easy-anki.svg)](https://badge.fury.io/rb/easy-anki)
 
@@ -18,12 +19,28 @@ If bundler is not being used to manage dependencies, install the gem by executin
 $ gem install easy-anki
 ```
 
+## Configuration
+
+You can either create a `.env` file and add your credentials, the default values will be fetched from this file, or configure the gem, for example in an initializer file.
+
+```rb
+EasyAnki.configure do |config|
+  config.openai_access_token = ENV["OPENAI_ACCESS_TOKEN"]
+  config.openai_organization_id = ENV["OPENAI_ORGANIZATION_ID"]
+  config.translation_language = ENV["TRANSLATION_LANGUAGE"]
+end
+```
+
 ## Usage
 
 ```rb
-words = EasyAnki.parse_input_file('anki-input.txt')
-EasyAnki.process_batches(words, 30) # max batch size 30
+words = [{ text: "rambling" }, { text: "beckoned" }] # Array of word hashes with key :text
+words = EasyAnki.parse_input_file('csv-input.csv') # Parse CSV input file; expected format: one word per row under column 'text'
+words = EasyAnki.parse_input_file('anki-input.txt') # Parse exported Anki data
+EasyAnki.generate_flashcards(words) # Generate a CSV file suitable for import into Anki using the provided words
 ```
+
+<!-- TODO: keep context -->
 
 ## Development
 

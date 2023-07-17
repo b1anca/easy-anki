@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["bncvr@outlook.com"]
 
   spec.summary = "Easy Anki"
-  spec.description = "Anki Flashcards generator"
+  spec.description = "Generate your Anki flashcards for language learning"
   spec.homepage = "https://github.com/b1anca/easy-anki"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"

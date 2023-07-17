@@ -12,11 +12,12 @@ module EasyAnki
   class Error < StandardError; end
 
   class Configuration
-    attr_accessor :openai_access_token, :openai_organization_id
+    attr_accessor :openai_access_token, :openai_organization_id, :translation_language
 
     def initialize
       @openai_access_token = ENV["OPENAI_ACCESS_TOKEN"]
       @openai_organization_id = ENV["OPENAI_ORGANIZATION_ID"]
+      @translation_language = ENV["TRANSLATION_LANGUAGE"]
     end
   end
 
@@ -37,7 +38,6 @@ module EasyAnki
   end
 
   def self.chat(message)
-    puts "Sending message to openai client ..."
     response = openai_client.chat(
       parameters: {
         model: "gpt-3.5-turbo",
@@ -49,9 +49,9 @@ module EasyAnki
   end
 
   def self.translate(words)
-    message = "For each word, return the translations to Portuguese (BR) and also definitions (with examples)." \
-              " The response should ONLY contain a JSON (root key data) with an array containing the keys text," \
-              " translations (array), definitions (array of objects with text and example). Words array:" \
+    message = "For each word, return the translations to #{configuration.translation_language} and also definitions" \
+              " (with examples). The response should ONLY contain a JSON (root key data) with an array containing the" \
+              " keys text, translations (array), definitions (array of objects with text and example). Words array:" \
               " #{words.to_json}"
     ai_message = chat(message)
     JSON.parse(ai_message, symbolize_names: true)[:data]
@@ -66,13 +66,13 @@ module EasyAnki
       puts "#{arr.count} words"
       arr.map { |a| { text: a.first } }
     else
-      CSV.parse(file, headers: true, header_converters: :symbol)
-      # arr.map { |h| Word.new(*h.values_at(*Word.members)) }
+      CSV.parse(file, headers: true, header_converters: :symbol).map(&:to_hash)
     end
   end
 
-  def self.process_batches(words, batch_size)
-    batches = words.count / batch_size
+  def self.generate_flashcards(words)
+    batch_size = 30
+    batches = (words.count.to_f / batch_size).ceil
     words.each_slice(batch_size).with_index do |words_batch, index|
       words_batch = words_batch.map { |w| w[:text] }
       puts "Processing batch #{index + 1}/#{batches} ..."
