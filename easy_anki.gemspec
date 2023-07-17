@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name = "easy-anki"
   spec.version = EasyAnki::VERSION
   spec.authors = ["Bianca Vieira"]
-  spec.email = ["biancavieira@fetch.ly"]
+  spec.email = ["bncvr@outlook.com"]
 
   spec.summary = "Easy Anki"
   spec.description = "Anki Flashcards generator"

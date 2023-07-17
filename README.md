@@ -1,24 +1,29 @@
 # Easy Anki
 
-TODO: Delete this and the text below, and describe your gem
+Anki Flashcards generator
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/easy_anki`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Gem Version](https://badge.fury.io/rb/easy-anki.svg)](https://badge.fury.io/rb/easy-anki)
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
-
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+```sh
+$ bundle add easy-anki
+```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
+```sh
+$ gem install easy-anki
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```rb
+words = EasyAnki.parse_input_file('anki-input.txt')
+EasyAnki.process_batches(words, 30) # max batch size 30
+```
 
 ## Development
 
