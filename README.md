@@ -1,7 +1,6 @@
 # Easy Anki
 
-Generate your Anki flashcards from your exported Anki `.txt` data, from `.csv` or directly from an array of words.
-Translates words and gives English definitions to boost your vocabulary!
+Fetch translations and definitions using ChatGPT and generate your Anki flashcards from an array of words, a `.csv` or your exported `.txt` Anki deck.
 
 [![Gem Version](https://badge.fury.io/rb/easy-anki.svg)](https://badge.fury.io/rb/easy-anki)
 
@@ -21,23 +20,24 @@ $ gem install easy-anki
 
 ## Configuration
 
-You can either create a `.env` file and add your credentials, the default values will be fetched from this file, or configure the gem, for example in an initializer file.
+Get your API key and organization ID from https://platform.openai.com/account/api-keys
+
+You can either create a `.env` from the `.env_sample` file and add your credentials, the default values will be fetched from this file, or configure the gem, for example in an initializer file.
 
 ```rb
 EasyAnki.configure do |config|
-  config.openai_access_token = ENV["OPENAI_ACCESS_TOKEN"]
-  config.openai_organization_id = ENV["OPENAI_ORGANIZATION_ID"]
-  config.translation_language = ENV["TRANSLATION_LANGUAGE"]
+  config.openai_access_token = ENV.fetch("OPENAI_ACCESS_TOKEN")
+  config.openai_organization_id = ENV.fetch("OPENAI_ORGANIZATION_ID")
+  config.target_language = ENV.fetch("TARGET_LANGUAGE")
 end
 ```
 
 ## Usage
 
 ```rb
-words = [{ text: "rambling" }, { text: "beckoned" }] # Array of word hashes with key :text
-words = EasyAnki.parse_input_file('csv-input.csv') # Parse CSV input file; expected format: one word per row under column 'text'
-words = EasyAnki.parse_input_file('anki-input.txt') # Parse exported Anki data
-EasyAnki.generate_flashcards(words) # Generate a CSV file suitable for import into Anki using the provided words
+words = [{ text: "rambling" }, { text: "beckoned" }] # or
+words = EasyAnki.parse_input_file('csv-input.csv') # or exported .txt file from Anki
+EasyAnki.generate_flashcards(words) # Generate an Anki CSV file
 ```
 
 <!-- TODO: keep context -->
