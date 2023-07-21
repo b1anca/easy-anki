@@ -75,34 +75,48 @@ module EasyAnki
     batch_size = 25
     batches = (words.count.to_f / batch_size).ceil
     words.each_slice(batch_size).with_index do |words_batch, index|
-      words_batch = words_batch.map { |w| w[:text] }
       puts "Processing batch #{index + 1}/#{batches} ..."
       process_batch(words_batch)
     end
   end
 
-  def self.process_batch(words_batch)
-    ai_results = translations_and_definitions(words_batch)
-    cards = create_anki_cards(ai_results)
+  def self.process_batch(raw_words)
+    words_text = raw_words.map { |w| w[:text] }
+    ai_results = translations_and_definitions(words_text)
+    cards = create_anki_cards(ai_results, raw_words)
     write_cards_to_file(cards)
   end
 
-  def self.create_anki_cards(words)
-    words.map do |note|
-      definitions = note[:definitions].map do |d|
-        d[:text] += "." if d[:text][-1] != "."
-        "<li>#{d[:text]} <em>\"#{d[:example]}\"</em></li>"
-      end
-      back = "#{note[:translations].join(", ")}\n\n<ul>#{definitions.join}</ul>"
-      { front: note[:text], back: back }
+  def self.parse_definitions(definitions)
+    definitions.map do |d|
+      d[:text] += "." if d[:text][-1] != "."
+      "<li>#{d[:text]} <em>\"#{d[:example]}\"</em></li>"
+    end
+  end
+
+  def self.parse_back(word, raw_words)
+    definitions = parse_definitions(word[:definitions])
+    back = "#{word[:translations].join(", ")}\n\n<ul>#{definitions.join}</ul>"
+    raw_word = raw_words.find { |w| w[:text] == word[:text] }
+    extra_info = raw_word.keys.reject { |k| k == :text }.map { |k| raw_word[k] }.join("\n")
+    back += "\n#{extra_info}" if extra_info
+    back
+  end
+
+  def self.create_anki_cards(words, raw_words)
+    words.map do |word|
+      back = parse_back(word, raw_words)
+      { front: word[:text], back: back }
     end
   end
 
   def self.write_cards_to_file(cards)
-    CSV.open("output_#{Date.today}.csv", "ab") do |csv|
+    filename = "output_#{Date.today}.csv"
+    CSV.open(filename, "ab") do |csv|
       cards.each do |hash|
         csv << hash.values
       end
     end
+    filename
   end
 end

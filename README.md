@@ -35,12 +35,10 @@ end
 ## Usage
 
 ```rb
-words = [{ text: "rambling" }, { text: "beckoned" }] # or
-words = EasyAnki.parse_input_file('csv-input.csv') # or exported .txt file from Anki
-EasyAnki.generate_flashcards(words) # Generate an Anki CSV file
+words = [{ text: "rambling" }, { text: "beckoned", context: "something else to add to the flashcard" }] # or
+words = EasyAnki.parse_input_file('csv-input.csv') # or an exported .txt file from Anki
+EasyAnki.generate_flashcards(words) # generate CSV file to import to Anki
 ```
-
-<!-- TODO: keep context -->
 
 ## Development
 
